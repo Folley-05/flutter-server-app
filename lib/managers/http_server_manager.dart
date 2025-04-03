@@ -2,9 +2,11 @@
 //
 // SPDX-License-Identifier: MIT
 
+import 'dart:convert';
 import 'dart:io';
 
-import 'package:esaip_lessons_server/data/server_constants.dart' as server_constants;
+import 'package:esaip_lessons_server/data/server_constants.dart'
+    as server_constants;
 import 'package:esaip_lessons_server/managers/abstract_manager.dart';
 import 'package:esaip_lessons_server/managers/global_manager.dart';
 import 'package:esaip_lessons_server/managers/http_logging_manager.dart';
@@ -58,12 +60,14 @@ class HttpServerManager extends AbstractManager {
 
   /// Initialize the mobile app router
   Future<void> _initMobileAppRouter(Router app) async {
-    app.get(formatVersion1Route(_helloRoute), _getHello);
+    app.get(formatVersion1Route(_helloRoute), _getHelloMobile);
+    app.get(formatVersion1Route("test"), _testRoute);
+    app.get(formatVersion1Route("temperature"), handleRequest);
   }
 
   /// Initialize the things app router
   Future<void> _initThingsAppRouter(Router app) async {
-    app.get(formatVersion1Route(_helloRoute), _getHello);
+    app.get(formatVersion1Route(_helloRoute), _getHelloThing);
   }
 
   /// Initialize the server
@@ -76,23 +80,68 @@ class HttpServerManager extends AbstractManager {
 
     await initRoute(appRouter);
 
-    final server = await io.serve(appRouter.call, server_constants.serverHostname, serverPort);
+    final server = await io.serve(
+      appRouter.call,
+      server_constants.serverHostname,
+      serverPort,
+    );
     _httpLoggingManager.addLog(
       HttpLog.now(
         requestId: "server-start",
         route: '/',
         method: '/',
         logLevel: Level.info,
-        message: 'Server: $serverName started on ${server.address.host}:${server.port}',
+        message:
+            'Server: $serverName started on ${server.address.host}:${server.port}',
       ),
     );
 
     return server;
   }
 
+  Future<Response> handleRequest(Request request) async {
+    String strBody = await request.readAsString();
+    dynamic body = null;
+    try {
+      body = jsonDecode(strBody);
+	  /* 
+	  Ici tu as récupéré le body donc tu peux faire tu traitement avec comme des calcul ou du crud
+	   */
+    } catch (e) {
+      print("error on decoding the body");
+    }
+    print("the body $body");
+    return body != null
+        ? Response(
+          200,
+          body: jsonEncode(body),
+          headers: {'Content-Type': 'application/json'},
+        )
+        // .ok(
+        //   jsonEncode(body),
+        //   headers: {'Content-Type': 'application/json'},
+        // )
+        : Response(
+          403,
+          body: jsonEncode({"error": "bad request"}),
+          headers: {'Content-Type': 'application/json'},
+        );
+  }
+
   /// Route to handle the hello request
-  Future<Response> _getHello(Request request) =>
-      _logRequest(request, (requestId) async => Response.ok('Hello, World!'));
+  Future<Response> _getHelloMobile(Request request) =>
+      _logRequest(request, (requestId) async => handleRequest(request));
+  Future<Response> _getHelloThing(Request request) => _logRequest(
+    request,
+    (requestId) async =>
+        Response.ok('Hello, World! </br>From the thing server'),
+  );
+  Future<Response> _testRoute(Request request) => _logRequest(
+    request,
+    (requestId) async => Response.ok(
+      "Welcome on test route !!! You gonna make amazing stuff with this route",
+    ),
+  );
 
   /// Useful method to wraps the request handling with logging
   Future<Response> _logRequest(
@@ -143,6 +192,9 @@ class HttpServerManager extends AbstractManager {
   /// {@macro abstract_manager.dispose}
   @override
   Future<void> dispose() async {
-    await Future.wait([_closeServer(_mobileAppServer), _closeServer(_thingsServer)]);
+    await Future.wait([
+      _closeServer(_mobileAppServer),
+      _closeServer(_thingsServer),
+    ]);
   }
 }
