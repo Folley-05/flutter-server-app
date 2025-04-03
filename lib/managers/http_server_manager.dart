@@ -8,6 +8,7 @@ import 'dart:io';
 import 'package:esaip_lessons_server/data/server_constants.dart'
     as server_constants;
 import 'package:esaip_lessons_server/managers/abstract_manager.dart';
+import 'package:esaip_lessons_server/managers/class.dart';
 import 'package:esaip_lessons_server/managers/global_manager.dart';
 import 'package:esaip_lessons_server/managers/http_logging_manager.dart';
 import 'package:esaip_lessons_server/models/http_log.dart';
@@ -131,28 +132,35 @@ class HttpServerManager extends AbstractManager {
 
 Future<Response> _getHouseList(Request request) async {
   final housesJson = _houses.map((h) => h.toJson()).toList();
-  return Response.ok(jsonEncode(housesJson), headers: {'Content-Type': 'application/json'});
+  return Response.ok(jsonEncode(housesJson),
+   headers: {'Content-Type': 'application/json'});
 }
 
 Future<Response> _getRoomList(Request request, String idHouse) async {
-  final house = _houses.firstWhere((h) => h.id == idHouse, orElse: () => null);
-
+ // final house = _houses.firstWhere((h) => h.id == idHouse, orElse: () => Response.ok());
+      return Response.ok('hello');
+  /*
   if (house == null) {
-    return Response(404, body: jsonEncode({"error": "House not found"}), headers: {'Content-Type': 'application/json'});
+    return Response(404, body: jsonEncode({"error": "House not found"}), 
+    headers: {'Content-Type': 'application/json'});
   }
 
   if (!house.isPowerOn) {
-    return Response(403, body: jsonEncode({"error": "Electricity is off in this house"}), headers: {'Content-Type': 'application/json'});
+    return Response(403, body: jsonEncode({"error": "Electricity is off in this house"}), 
+    headers: {'Content-Type': 'application/json'});
   }
 
   final roomsJson = house.rooms.map((r) => r.toJson()).toList();
-  return Response.ok(jsonEncode(roomsJson), headers: {'Content-Type': 'application/json'});
+  return Response.ok(jsonEncode(roomsJson), 
+  headers: {'Content-Type': 'application/json'}); 
+  */
 }
 
 
 // Petit helper pour route sans param
 
-Handler _logRequestWrapper(Future<Response> Function(Request) handler) {
+Handler _logRequestWrapper(Future<Response> Function(Request) handler) 
+{
   return (Request request) => _logRequest(request, (requestId) async => handler(request));
 }
 
@@ -254,50 +262,11 @@ Handler _logRequestWrapper(Future<Response> Function(Request) handler) {
       _closeServer(_thingsServer),
     ]);
   }
-  class Room {
-  final String id;
-  final String name;
-  final String imageOn;
-  final String imageOff;
-  bool isOn;
 
-  Room({
-    required this.id,
-    required this.name,
-    required this.imageOn,
-    required this.imageOff,
-    this.isOn = false,
-  });
 
-  Map<String, dynamic> toJson() => {
-        "id": id,
-        "name": name,
-        "imageOn": imageOn,
-        "imageOff": imageOff,
-        "isOn": isOn,
-      };
-}
-
-class House {
-  final String id;
-  final String name;
-  final bool isPowerOn;
-  final List<Room> rooms;
-
-  House({
-    required this.id,
-    required this.name,
-    required this.isPowerOn,
-    required this.rooms,
-  });
-
-  Map<String, dynamic> toJson() => {
-        "id": id,
-        "name": name,
-      };
-}
 
 }
+
 
 
 
