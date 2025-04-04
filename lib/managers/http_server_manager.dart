@@ -11,6 +11,7 @@ import 'package:esaip_lessons_server/managers/abstract_manager.dart';
 import 'package:esaip_lessons_server/managers/class.dart';
 import 'package:esaip_lessons_server/managers/global_manager.dart';
 import 'package:esaip_lessons_server/managers/http_logging_manager.dart';
+import 'package:esaip_lessons_server/managers/socket_server_manager.dart';
 import 'package:esaip_lessons_server/models/http_log.dart';
 import 'package:esaip_lessons_server/routers/sensor_router.dart';
 import 'package:flutter/foundation.dart';
@@ -63,11 +64,17 @@ class HttpServerManager extends AbstractManager {
 
   /// Initialize the mobile app router
   Future<void> _initMobileAppRouter(Router app) async {
+    Socket? socket = await openSocket();
     app.get(formatVersion1Route(_helloRoute), _getHelloMobile);
     app.get(formatVersion1Route("test"), _testRoute);
     app.post(formatVersion1Route("roomlist/<idHouse>"), _getRoomList);
-	app.get(formatVersion1Route("devices"), listSensors);
-	app.get(formatVersion1Route("getlastentry"), retrieveLastEntry);
+    app.get(formatVersion1Route("devices"), listSensors);
+    app.get(formatVersion1Route("getlastentry"), retrieveLastEntry);
+    app.get(formatVersion1Route("getrooms"), retrieveRoom);
+    app.get(
+      formatVersion1Route("switchlight/<idroom>"),
+      (Request request, String id) => switchRoomById(request, id, socket!),
+    );
   }
 
   /// Initialize the things app router
@@ -115,8 +122,11 @@ class HttpServerManager extends AbstractManager {
   }
 
   /// Route to handle the hello request
-  Future<Response> _getHelloMobile(Request request) =>
-      _logRequest(request, (requestId) async => Response.ok('Hello, World! </br>From the Mobile app server'));
+  Future<Response> _getHelloMobile(Request request) => _logRequest(
+    request,
+    (requestId) async =>
+        Response.ok('Hello, World! </br>From the Mobile app server'),
+  );
   Future<Response> _getHelloThing(Request request) => _logRequest(
     request,
     (requestId) async =>

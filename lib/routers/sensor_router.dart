@@ -1,8 +1,10 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:esaip_lessons_server/managers/sensor_manager.dart';
 import 'package:esaip_lessons_server/models/sensor.dart';
 import 'package:esaip_lessons_server/utils/file.dart';
+import 'package:esaip_lessons_server/utils/room.dart';
 import 'package:shelf/shelf.dart';
 
 Future<Response> listSensors(Request request) async {
@@ -43,6 +45,40 @@ Future<Response> retrieveLastEntry(Request request) async {
       body: jsonEncode(lastEntry),
       headers: {'Content-Type': 'application/json'},
     );
+  } catch (e) {
+    print("error on retrieving the data $e");
+    return Response(
+      501,
+      body: jsonEncode({"error": "error on retrieving the data"}),
+      headers: {'Content-Type': 'application/json'},
+    );
+  }
+}
+
+Future<Response> retrieveRoom(Request request) async {
+  try {
+    String lastEntry = await readRoom();
+    return Response(
+      200,
+      body: lastEntry,
+      headers: {'Content-Type': 'application/json'},
+    );
+  } catch (e) {
+    print("error on retrieving the data $e");
+    return Response(
+      501,
+      body: jsonEncode({"error": "error on retrieving the data"}),
+      headers: {'Content-Type': 'application/json'},
+    );
+  }
+}
+
+Response switchRoomById(Request request, String id, Socket socket) {
+  try {
+    final roomId = id;
+    print("the id of the room $roomId");
+    socket.write(id + "-switch");
+    return Response.ok("hello");
   } catch (e) {
     print("error on retrieving the data $e");
     return Response(

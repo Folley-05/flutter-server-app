@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 import 'package:esaip_lessons_server/managers/global_manager.dart';
+import 'package:esaip_lessons_server/managers/socket_server_manager.dart';
 import 'package:esaip_lessons_server/ui/main_app/main_app_ui.dart';
 import 'package:flutter/material.dart';
 
