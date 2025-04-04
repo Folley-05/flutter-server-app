@@ -14,12 +14,12 @@ class Room {
   });
 
   Map<String, dynamic> toJson() => {
-        "id": id,
-        "name": name,
-        "imageOn": imageOn,
-        "imageOff": imageOff,
-        "isOn": isOn,
-      };
+    "id": id,
+    "name": name,
+    "imageOn": imageOn,
+    "imageOff": imageOff,
+    "isOn": isOn,
+  };
 }
 
 class House {
@@ -35,8 +35,6 @@ class House {
     required this.rooms,
   });
 
-  Map<String, dynamic> toJson() => {
-        "id": id,
-        "name": name,
-      };
+  Map<String, dynamic> toJson() => {"id": id, "name": name};
 }
+
