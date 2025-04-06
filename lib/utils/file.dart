@@ -1,12 +1,14 @@
 import 'dart:convert';
 import 'dart:io';
 
+/// path of the file to store sensors data
 String filePath = './lib/store/sensor_data.json';
 
 /// Stores the given data in a JSON file (appends to a list).
 Future<void> writeDataToFile(Map<String, dynamic> data) async {
   final file = File(filePath);
 
+  /// List of sensors
   List<dynamic> dataList = [];
 
   // If the file exists, read the current data
@@ -52,7 +54,7 @@ Future<List<dynamic>> readAllData() async {
 
 /// Retrieves the last X entries from the JSON file.
 Future<List<dynamic>> readLastEntries(int x) async {
-  List<dynamic> allData = await readAllData();
+  final List<dynamic> allData = await readAllData();
   return allData.isNotEmpty ? allData.takeLast(x) : [];
 }
 

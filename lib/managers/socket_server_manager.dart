@@ -1,8 +1,8 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:esaip_lessons_server/utils/room.dart';
 
+/// Function to handle socket communication
 Future<Socket?> openSocket() async {
   final server = await ServerSocket.bind(InternetAddress.anyIPv4, 3500);
   print('Socket server is running on port ${server.port}');
@@ -33,4 +33,5 @@ Future<Socket?> openSocket() async {
     );
   return socket;
   }
+  return null;
 }

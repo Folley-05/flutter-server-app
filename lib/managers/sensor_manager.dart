@@ -1,11 +1,10 @@
 import 'package:esaip_lessons_server/models/sensor.dart';
-import 'package:esaip_lessons_server/utils/functions.dart';
 
-List<Sensor> getSensors() {
-  return [
+/// Function to generate initial sensors
+List<Sensor> getSensors() => [
     Sensor(
       "1",
-      "Temperature Sensor From Server",
+      "Temperature Sensor On House",
       "temperature_sensor",
       clientAttributes: {'Serial Number': 'TS-001'},
       serverAttributes: {'Location': 'Living Room'},
@@ -13,15 +12,10 @@ List<Sensor> getSensors() {
     ),
     Sensor(
       "2",
-      "Humidity Sensor From Server",
+      "Domotic House ",
       "my_thing",
       clientAttributes: {'Serial Number': 'HS-002'},
       serverAttributes: {'Location': 'Kitchen'},
       telemetryData: {'temperature': '22.5 °C'},
     ),
   ];
-}
-
-void receiveSensorData(dynamic data) {
-	
-}

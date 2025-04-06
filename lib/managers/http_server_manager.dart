@@ -2,13 +2,11 @@
 //
 // SPDX-License-Identifier: MIT
 
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:esaip_lessons_server/data/server_constants.dart'
     as server_constants;
 import 'package:esaip_lessons_server/managers/abstract_manager.dart';
-import 'package:esaip_lessons_server/managers/class.dart';
 import 'package:esaip_lessons_server/managers/global_manager.dart';
 import 'package:esaip_lessons_server/managers/http_logging_manager.dart';
 import 'package:esaip_lessons_server/managers/socket_server_manager.dart';
@@ -40,6 +38,9 @@ class HttpServerManager extends AbstractManager {
   /// Instance of the http logging manager
   late final HttpLoggingManager _httpLoggingManager;
 
+  /// Socket server to establish communication with the different app
+  late final Socket? socket;
+
   /// {@macro abstract_manager.initialize}
   @override
   Future<void> initialize() async {
@@ -60,11 +61,12 @@ class HttpServerManager extends AbstractManager {
 
     _mobileAppServer = result[0];
     _thingsServer = result[1];
+	socket = await openSocket();
   }
 
   /// Initialize the mobile app router
   Future<void> _initMobileAppRouter(Router app) async {
-    Socket? socket = await openSocket();
+    // Socket? socket = await openSocket();
     app.get(formatVersion1Route(_helloRoute), _getHelloMobile);
     app.get(formatVersion1Route("test"), _testRoute);
     app.post(formatVersion1Route("roomlist/<idHouse>"), _getRoomList);
@@ -112,14 +114,8 @@ class HttpServerManager extends AbstractManager {
     return server;
   }
 
-  Future<Response> _getRoomList(Request request, String idHouse) async {
-    return Response.ok('hello');
-  }
+  Future<Response> _getRoomList(Request request, String idHouse) async => Response.ok('hello');
 
-  Handler _logRequestWrapper(Future<Response> Function(Request) handler) {
-    return (Request request) =>
-        _logRequest(request, (requestId) async => handler(request));
-  }
 
   /// Route to handle the hello request
   Future<Response> _getHelloMobile(Request request) => _logRequest(
@@ -180,6 +176,7 @@ class HttpServerManager extends AbstractManager {
       ),
     );
     await server.close(force: true);
+	await socket?.close();
   }
 
   /// Format the route for the server
