@@ -1,0 +1,1 @@
+{"sensor":{"id":"1","name":"Temperature Sensor From Server","type":"temperature_sensor","clientAttributes":{"Serial Number":"TS-001"},"serverAttributes":{"Location":"Living Room"},"telemetryData":{"temperature":"22.5 °C"}},"temperature":47.86,"humidity":47.86,"timestamp":"2025-04-04T04:06:32.307748"}
