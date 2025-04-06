@@ -10,13 +10,25 @@ SPDX-License-Identifier: MIT
 
 - [Table of contents](#table-of-contents)
 - [Presentation](#presentation)
+- [Features](#features)
 
 ## Presentation
 
-This is the base of the server app for ESAIP lessons
+This project implements a **REST API server in Dart** for managing a smart home system. It supports retrieving houses and rooms, managing electricity states, and logging HTTP requests. Designed to be extendable with real-time WebSocket support
 
-The app has been tested on Windows (but not on linux and macOS).
+---
 
-It creates a Http web server and displays the log to the main page.
+##  Features
 
-To add new request go to the `http_server_manager.dart` class.
+- REST API with Shelf and Shelf Router
+- Simulated in-memory data for houses and rooms
+- Structured logging for requests
+- Pre-configured versioned routes (`/api/v1`)
+- Supports both "Mobile App" and "Things App" server ports
+- Architecture supports WebSocket extension
+---
+
+
+
+
+
