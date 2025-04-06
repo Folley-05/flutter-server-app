@@ -170,7 +170,7 @@ Handler _logRequestWrapper(Future<Response> Function(Request) handler)
     try {
       body = jsonDecode(strBody);
 	  /* 
-	  Ici tu as récupéré le body donc tu peux faire tu traitement avec comme des calcul ou du crud
+	  here 
 	   */
     } catch (e) {
       print("error on decoding the body");
@@ -262,7 +262,6 @@ Handler _logRequestWrapper(Future<Response> Function(Request) handler)
       _closeServer(_thingsServer),
     ]);
   }
-
 
 
 }
