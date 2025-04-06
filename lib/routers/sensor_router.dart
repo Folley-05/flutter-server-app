@@ -7,6 +7,7 @@ import 'package:esaip_lessons_server/utils/file.dart';
 import 'package:esaip_lessons_server/utils/room.dart';
 import 'package:shelf/shelf.dart';
 
+/// This function is used to create the router for the sensor
 Future<Response> listSensors(Request request) async {
   List<Sensor> sensors = getSensors();
   return Response(
@@ -16,6 +17,7 @@ Future<Response> listSensors(Request request) async {
   );
 }
 
+/// This function is used to create the router for the sensor
 Future<Response> handleSensorData(Request request) async {
   String strBody = await request.readAsString();
   Map<String, dynamic> body;
@@ -36,7 +38,7 @@ Future<Response> handleSensorData(Request request) async {
     );
   }
 }
-
+/// This function is used to create the router for the sensor 
 Future<Response> retrieveLastEntry(Request request) async {
   try {
     List<dynamic> lastEntry = await readLastEntries(1);

@@ -1,10 +1,16 @@
+// define rooom and methods
+import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
+//  import 'package:esaip_lessons_server/managers/abstract_manager.dart';
+
+// define room properties and methods
 class Room {
   final String id;
   final String name;
   final String imageOn;
   final String imageOff;
   bool isOn;
-
+// isOn is used to check if the room is on or off
   Room({
     required this.id,
     required this.name,
@@ -21,7 +27,7 @@ class Room {
     "isOn": isOn,
   };
 }
-
+// define house properties and methods 
 class House {
   final String id;
   final String name;
@@ -37,4 +43,5 @@ class House {
 
   Map<String, dynamic> toJson() => {"id": id, "name": name};
 }
+
 
